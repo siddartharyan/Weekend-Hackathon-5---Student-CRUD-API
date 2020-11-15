@@ -88,6 +88,10 @@ app.put('/api/student/:id', (req, res) => {
             }
         }
     })
+    if (changed.length === 0) {
+        res.json({});
+        return;
+    }
     const id = Number(req.params.id);
     let index = -1;
     let obj = undefined;
@@ -105,8 +109,8 @@ app.put('/api/student/:id', (req, res) => {
     }
     let updated = {};
     for (let i = 0; i < changed.length; i++) {
-        obj[changed[i]] = (changed[i] === 'currentClass') ? Number(headers[changed[i]]) : headers[changed[i]];
-        updated[changed[i]] = (changed[i] === 'currentClass') ? Number(headers[changed[i]]) : headers[changed[i]];
+        obj[changed[i]] = (changed[i] === 'currentClass') ? Number(headers[changed[i].tolowerCase()]) : headers[changed[i].tolowerCase()];
+        updated[changed[i]] = (changed[i] === 'currentClass') ? Number(headers[changed[i].tolowerCase()]) : headers[changed[i].tolowerCase()];
     }
     let arr = [...data];
     arr[index] = obj;
