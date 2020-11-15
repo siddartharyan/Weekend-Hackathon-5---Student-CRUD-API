@@ -51,29 +51,22 @@ app.delete('/api/student/:id', (req, res) => {
 })
 
 app.post('/api/student', (req, res) => {
-    let headers = req.body;
-    let cnt = 0;
-    Object.keys(headers).forEach((key1) => {
-        if (key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
-            cnt++;
+    const { name, currentClass, division } = req.body;
+    if (name && currentClass && division) {
+        let id = (data.length !== 0) ? data[data.length - 1].id : -1;
+        id = (id !== 0) ? id + 1 : 0;
+        const obj = {
+            id: id,
+            name: name,
+            currentClass: currentClass,
+            division: division
         }
-    })
-    if (cnt !== 3) {
+        data.push(obj);
+        res.send({ 'id': id });
+    } else {
         res.status(400).json({});
         return;
     }
-    let arr = [...data];
-    let obj = {
-        'id': Number(no + 1),
-        'name': headers.name,
-        'currentClass': Number(headers.currentclass),
-        'division': headers.division
-    }
-    arr.push(obj);
-    data = arr;
-    no++;
-    let i = no;
-    res.send({ 'id': Number(i) });
 })
 
 app.put('/api/student/:id', (req, res) => {
@@ -111,7 +104,7 @@ app.put('/api/student/:id', (req, res) => {
     let arr = [...data];
     arr[index] = obj;
     data = arr;
-    res.json(updated);
+    res.json();
 
 })
 
