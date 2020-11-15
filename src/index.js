@@ -2,7 +2,6 @@ const express = require('express')
 const app = express()
 const bodyParser = require("body-parser");
 var data = require('./InitialData.js');
-let no = data.length;
 const port = 8080
 app.use(express.urlencoded());
 
@@ -72,58 +71,63 @@ app.post('/api/student', (req, res) => {
 
 app.put('/api/student/:id', (req, res) => {
     const id = req.params.id;
-    if (isNaN(id)) {
-        res.status(400).json({});
-        return;
-    }
-    let updData = req.body;
-    if (updData) {
-        let params = [];
-        for (let i = 0; i < updData.length; i++) {
-            if (updData[i] === 'name' || updData[i] === 'currentClass' || updData[i] === 'division') {
-                params.push(updData);
+    const data = req.body;
+    if (data) {
+        if (Object.is(parseInt(id), NaN)) {
+            res.sendStatus(400);
+        } else {
+            let found = false;
+            let validKey = ["name", "currentClass", "division"];
+            for (let i = 0; i < Object.keys(data).length; i++) {
+                found = validKey.includes(Object.keys(data)[i]);
             }
-        }
-        if (params.length === 0) {
-            res.status(400).json({});
-            return;
-        }
-        let index = -1;
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-        if (index === -1 && params.length === 3) {
-            let id = (data.length !== 0) ? data[data.length - 1].id : -1;
-            let { name, currentClass, division } = updData;
-            id = (id !== 0) ? id + 1 : 0;
-            const obj = {
-                id: id,
-                name: name,
-                currentClass: Number(currentClass),
-                division: division
-            }
-            data.push(obj);
-            res.json();
-            return;
-        }
-        let obj = data[index];
-        for (let i = 0; i < params.length; i++) {
-            if (params[i] === 'currentClass') {
-                obj[params[i]] = Number(updData['currentClass']);
+            if (!found) {
+                res.sendStatus(400);
+                return;
             } else {
-                obj[params[i]] = updData[params[i]];
+                let newStudents = [...data];
+                let idFound = false;
+                newStudents = newStudents.map((student) => {
+                    if (student.id === Number(id)) {
+                        idFound = true;
+                        let newS = {...student }
+                        for (let i = 0; i < Object.keys(data).length; i++) {
+                            newS[Object.keys(data)[i]] = Object.keys(data)[i] === "currentClass" ? Number(data[Object.keys(data)[i]]) : data[Object.keys(data)[i]];
+                        }
+                        return newS;
+                    } else {
+                        return student
+                    }
+                })
+                if (!idFound) {
+                    if (Object.keys(data).length === 3) {
+                        const lastId = data.length !== 0 ? data[data.length - 1].id : -1;
+                        const { name, currentClass, division } = data;
+                        lastId = lastId !== 0 ? lastId + 1 : 0;
+                        const newStudent = {
+                            id: lastId,
+                            name: name,
+                            currentClass: Number(currentClass),
+                            division: division
+
+                        }
+
+                        data.push(newStudent);
+                        res.json()
+                    } else {
+                        res.sendStatus(400)
+                    }
+                } else {
+                    data = []
+                    data = [...newStudents]
+                    res.json();
+                }
             }
         }
-        data[index] = obj;
-        res.json();
     } else {
-        res.status(400).json({});
+        res.sendStatus(400);
         return;
     }
-
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
