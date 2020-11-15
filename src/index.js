@@ -59,6 +59,7 @@ app.post('/api/student', (req, res) => {
     })
     if (cnt !== 3) {
         res.status(400).json({});
+        return;
     }
     let arr = [...data];
     let obj = {
@@ -71,7 +72,7 @@ app.post('/api/student', (req, res) => {
     data = arr;
     no++;
     let i = no;
-    res.json({ 'id': Number(i) });
+    res.send({ 'id': Number(i) });
 })
 
 app.put('/api/student/:id', (req, res) => {
@@ -99,11 +100,12 @@ app.put('/api/student/:id', (req, res) => {
     }
     if (index === -1) {
         res.status(400).json({});
+        return;
     }
     let updated = {};
     for (let i = 0; i < changed.length; i++) {
         obj[changed[i]] = (changed[i] === 'currentClass') ? Number(headers[changed[i]]) : headers[changed[i]];
-        updated[changed[i]] = headers[changed[i]];
+        updated[changed[i]] = (changed[i] === 'currentClass') ? Number(headers[changed[i]]) : headers[changed[i]];
     }
     let arr = [...data];
     arr[index] = obj;
