@@ -19,6 +19,7 @@ app.get('/api/student/:id', (req, res) => {
     const id = Number(req.params.id);
     if (isNaN(id)) {
         res.status(404).json({});
+        return;
     }
     let obj = undefined;
     for (let i = 0; i < data.length; i++) {
