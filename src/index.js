@@ -30,6 +30,7 @@ app.get('/api/student/:id', (req, res) => {
     }
     if (obj === undefined) {
         res.status(404).json({});
+        return;
     }
     res.json(obj);
 })
