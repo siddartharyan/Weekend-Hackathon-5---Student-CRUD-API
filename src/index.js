@@ -16,14 +16,23 @@ app.get('/api/student', (req, res) => {
 })
 
 app.get('/api/student/:id', (req, res) => {
-    const id = req.params.id;
-    const student = studentArray.filter((student) => student.id === Number(id));
-    if (student.length !== 0) {
-        res.json(student[0]);
-    } else {
-        res.sendStatus(404);
+    const id = Number(req.params.id);
+    if (isNaN(id)) {
+        res.status(404).json({});
         return;
     }
+    let obj = undefined;
+    for (let i = 0; i < data.length; i++) {
+        if (data[i].id === id) {
+            obj = data[i];
+            break;
+        }
+    }
+    if (obj === undefined) {
+        res.status(404).json({});
+        return;
+    }
+    res.json(obj);
 })
 
 app.delete('/api/student/:id', (req, res) => {
@@ -34,7 +43,7 @@ app.delete('/api/student/:id', (req, res) => {
             arr.push(data[i]);
         }
     }
-    if (arr.length === data.length) {
+    if (arr.length === data.length || arr.length === 0) {
         res.status(404).json({});
         return;
     }
