@@ -81,9 +81,9 @@ app.put('/api/student/:id', (req, res) => {
         if (key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
             if (key1 === 'currentclass') {
                 changed.push('currentClass');
-                continue;
+            } else {
+                changed.push(key1);
             }
-            changed.push(key1);
         }
     })
     const id = Number(req.params.id);
