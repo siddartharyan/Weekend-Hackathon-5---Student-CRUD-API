@@ -58,20 +58,20 @@ app.post('/api/student', (req, res) => {
         }
     })
     if (cnt !== 3) {
-        res.status(400).send({});
+        res.status(400).json({});
     }
     let arr = [...data];
     let obj = {
-        'id': no + 1,
+        'id': Number(no + 1),
         'name': headers.name,
-        'currentClass': headers.currentclass,
+        'currentClass': Number(headers.currentclass),
         'division': headers.division
     }
     arr.push(obj);
     data = arr;
-    let i = no + 1;
     no++;
-    res.json({ 'id': i });
+    let i = no;
+    res.json({ 'id': Number(i) });
 })
 
 app.put('/api/student/:id', (req, res) => {
@@ -79,6 +79,10 @@ app.put('/api/student/:id', (req, res) => {
     let changed = [];
     Object.keys(headers).forEach((key1) => {
         if (key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
+            if (key1 === 'currentclass') {
+                changed.push('currentClass');
+                continue;
+            }
             changed.push(key1);
         }
     })
@@ -98,7 +102,7 @@ app.put('/api/student/:id', (req, res) => {
     }
     let updated = {};
     for (let i = 0; i < changed.length; i++) {
-        obj[changed[i]] = headers[changed[i]];
+        obj[changed[i]] = (changed[i] === 'currentClass') ? Number(headers[changed[i]]) : headers[changed[i]];
         updated[changed[i]] = headers[changed[i]];
     }
     let arr = [...data];
