@@ -12,11 +12,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
     // your code goes here
 app.get('/api/student', (req, res) => {
-    res.json(data);
+    res.send(data);
 })
 
 app.get('/api/student/:id', (req, res) => {
     const id = Number(req.params.id);
+    if (isNaN(id)) {
+        res.status(404).json({});
+    }
     let obj = undefined;
     for (let i = 0; i < data.length; i++) {
         if (data[i].id === id) {
@@ -43,7 +46,7 @@ app.delete('/api/student/:id', (req, res) => {
         return;
     }
     data = arr;
-    res.status(200);
+    res.json('provided given id is valid');
 })
 
 app.post('/api/student', (req, res) => {
@@ -71,8 +74,9 @@ app.post('/api/student', (req, res) => {
     res.json(i);
 })
 
-app.put('/api/student', (req, res) => {
+app.put('/api/student/:id', (req, res) => {
     let headers = req.headers;
+    let id = Number(req.params.id);
     let cnt = 0;
     Object.keys(headers).forEach((key1) => {
         if (key1 === 'id' || key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
@@ -87,8 +91,7 @@ app.put('/api/student', (req, res) => {
     let changed = {};
     for (let i = 0; i < data.length; i++) {
         let did = data[i].id;
-        let hid = headers.id;
-        if (Number(did) === Number(hid)) {
+        if (Number(id) === Number(did)) {
             index = i;
             obj = data[i];
             if (data[i].name !== headers.name) {
