@@ -51,7 +51,7 @@ app.delete('/api/student/:id', (req, res) => {
 })
 
 app.post('/api/student', (req, res) => {
-    let headers = req.headers;
+    let headers = req.body;
     let cnt = 0;
     Object.keys(headers).forEach((key1) => {
         if (key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
@@ -77,7 +77,7 @@ app.post('/api/student', (req, res) => {
 })
 
 app.put('/api/student/:id', (req, res) => {
-    let headers = req.headers;
+    let headers = req.body;
     let changed = [];
     Object.keys(headers).forEach((key1) => {
         if (key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
@@ -88,10 +88,6 @@ app.put('/api/student/:id', (req, res) => {
             }
         }
     })
-    if (changed.length === 0) {
-        res.json({});
-        return;
-    }
     const id = Number(req.params.id);
     let index = -1;
     let obj = undefined;
