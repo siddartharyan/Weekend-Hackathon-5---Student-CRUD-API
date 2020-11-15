@@ -62,10 +62,10 @@ app.post('/api/student', (req, res) => {
     }
     let arr = [...data];
     let obj = {
-        id: no + 1,
-        name: headers.name,
-        currentClass: headers.currentclass,
-        division: headers.division
+        'id': no + 1,
+        'name': headers.name,
+        'currentClass': headers.currentclass,
+        'division': headers.division
     }
     arr.push(obj);
     data = arr;
@@ -79,12 +79,13 @@ app.put('/api/student/:id', (req, res) => {
     let id = Number(req.params.id);
     let cnt = 0;
     Object.keys(headers).forEach((key1) => {
-        if (key1 === 'id' || key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
+        if (key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
             cnt++;
         }
     })
-    if (cnt !== 4) {
+    if (cnt !== 3) {
         res.status(400).send({});
+        return;
     }
     let obj = undefined;
     let index = -1;
@@ -99,7 +100,7 @@ app.put('/api/student/:id', (req, res) => {
                 changed['name'] = headers.name;
             }
             if (data[i].currentClass !== headers.currentclass) {
-                obj['currentClass'] = headers.currentClass;
+                obj['currentClass'] = headers.currentclass;
                 changed['currentClass'] = headers.currentclass;
             }
             if (data[i].division !== headers.division) {
@@ -111,6 +112,7 @@ app.put('/api/student/:id', (req, res) => {
     }
     if (index === -1) {
         res.status(400).json({});
+        return;
     }
     let arr = [...data];
     arr[index] = obj;
