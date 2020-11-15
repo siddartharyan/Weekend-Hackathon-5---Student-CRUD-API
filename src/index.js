@@ -42,7 +42,7 @@ app.delete('/api/student/:id', (req, res) => {
         }
     }
     if (arr.length === data.length) {
-        res.status(400).json({});
+        res.status(404).json({});
         return;
     }
     data = arr;
@@ -76,48 +76,36 @@ app.post('/api/student', (req, res) => {
 
 app.put('/api/student/:id', (req, res) => {
     let headers = req.headers;
-    let id = Number(req.params.id);
-    let cnt = 0;
+    let changed = [];
     Object.keys(headers).forEach((key1) => {
         if (key1 === 'name' || key1 === 'currentclass' || key1 === 'division') {
-            cnt++;
+            changed.push(key1);
         }
     })
-    if (cnt !== 3) {
-        res.status(400).send({});
-        return;
-    }
-    let obj = undefined;
+    const id = Number(req.params.id);
     let index = -1;
-    let changed = {};
+    let obj = undefined;
     for (let i = 0; i < data.length; i++) {
-        let did = data[i].id;
-        if (Number(id) === Number(did)) {
+        let did = Number(data[i].id);
+        if (did === id) {
             index = i;
             obj = data[i];
-            if (data[i].name !== headers.name) {
-                obj['name'] = headers.name;
-                changed['name'] = headers.name;
-            }
-            if (data[i].currentClass !== headers.currentclass) {
-                obj['currentClass'] = headers.currentclass;
-                changed['currentClass'] = headers.currentclass;
-            }
-            if (data[i].division !== headers.division) {
-                obj['division'] = headers.division;
-                changed['division'] = headers.division;
-            }
             break;
         }
     }
     if (index === -1) {
         res.status(400).json({});
-        return;
+    }
+    let updated = {};
+    for (let i = 0; i < changed.length; i++) {
+        obj[changed[i]] = headers[changed[i]];
+        updated[changed[i]] = headers[changed[i]];
     }
     let arr = [...data];
     arr[index] = obj;
     data = arr;
-    res.json(changed);
+    res.json(updated);
+
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
