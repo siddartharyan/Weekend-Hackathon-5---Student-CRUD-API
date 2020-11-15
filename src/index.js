@@ -71,7 +71,7 @@ app.post('/api/student', (req, res) => {
     data = arr;
     let i = no + 1;
     no++;
-    res.json(i);
+    res.json({ 'id': i });
 })
 
 app.put('/api/student/:id', (req, res) => {
