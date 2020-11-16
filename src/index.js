@@ -63,7 +63,7 @@ app.post('/api/student', (req, res) => {
             division: division
         }
         data.push(obj);
-        res.send({ 'id': id });
+        res.json({ 'id': id });
     } else {
         res.status(400).json();
         return;
