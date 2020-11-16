@@ -18,7 +18,7 @@ app.get('/api/student', (req, res) => {
 app.get('/api/student/:id', (req, res) => {
     const id = Number(req.params.id);
     if (isNaN(id)) {
-        res.status(404).json({});
+        res.status(404).json();
         return;
     }
     let obj = undefined;
@@ -29,7 +29,7 @@ app.get('/api/student/:id', (req, res) => {
         }
     }
     if (obj === undefined) {
-        res.status(404).json({});
+        res.status(404).json();
         return;
     }
     res.json(obj);
@@ -44,7 +44,7 @@ app.delete('/api/student/:id', (req, res) => {
         }
     }
     if (arr.length === data.length || arr.length === 0) {
-        res.status(404).json({});
+        res.status(404).json();
         return;
     }
     data = arr;
@@ -65,7 +65,7 @@ app.post('/api/student', (req, res) => {
         data.push(obj);
         res.send({ 'id': id });
     } else {
-        res.status(400).json({});
+        res.status(400).json();
         return;
     }
 })
