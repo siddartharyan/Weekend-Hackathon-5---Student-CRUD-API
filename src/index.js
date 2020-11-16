@@ -59,7 +59,7 @@ app.post('/api/student', (req, res) => {
         const obj = {
             id: id,
             name: name,
-            currentClass: currentClass,
+            currentClass: Number(currentClass),
             division: division
         }
         data.push(obj);
